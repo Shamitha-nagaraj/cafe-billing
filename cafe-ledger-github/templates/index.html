@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="A thoughtful café register with billing, sales insights, and an explainable weekly forecast.">
+  <title>Café Ledger · A little more clarity</title>
+  <link rel="stylesheet" href="/static/styles.css"><script src="/static/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="/" aria-label="Café Ledger home"><span class="brand-mark">cl.</span><span id="brandName">Café Ledger</span></a><span class="top-note">GOOD COFFEE. CLEAR NUMBERS.</span><span id="modeBadge" class="mode-badge">Connecting…</span></header>
+  <div id="demoBanner" class="demo-banner" hidden><strong>Demonstration workspace</strong><span>All sales here are synthetic. New bills stay in the separate demo database.</span></div>
+  <main class="workspace">
+    <section class="page-intro"><div><p class="eyebrow">YOUR DAILY COUNTER COMPANION</p><h1>A good day starts here.</h1><p class="intro-copy">From the first espresso to the last bill. Keep the day flowing.</p></div><div class="date-stamp"><span class="sun-symbol" aria-hidden="true">✳</span><span id="businessDate">Loading your counter</span></div></section>
+    <nav class="tabs" aria-label="Workspace"><button id="registerTab" class="tab active" aria-pressed="true">01 <span>Register</span></button><button id="salesTab" class="tab" aria-pressed="false">02 <span>Sales & forecast</span></button><span class="tabs-caption">One café. A clearer picture.</span></nav>
+    <p id="globalError" class="notice error" role="alert" hidden></p>
+    <section id="registerView" class="register-layout">
+      <div class="menu-panel"><div class="section-title"><div><p class="eyebrow">MADE TO ORDER</p><h2>The menu</h2></div><button id="manageMenu" class="text-button">Manage menu ↗</button></div>
+        <label class="search"><span aria-hidden="true">⌕</span><input id="menuSearch" type="search" placeholder="Find a coffee, a bite, a favourite…" aria-label="Search menu"></label>
+        <div id="categories" class="categories" aria-label="Menu categories"></div><div id="menuGrid" class="menu-grid" aria-live="polite"></div>
+        <div id="menuManagement" class="management" hidden><div class="section-title"><h3>Keep your menu fresh</h3><button id="addMenuItem" class="button small">+ Add item</button></div><p>Changes apply to new bills. Previous receipts keep their original prices.</p><div id="manageList"></div></div>
+      </div>
+      <aside class="cart-panel"><div class="cart-title"><div><p class="eyebrow">AT THE COUNTER</p><h2>Current order</h2></div><span id="cartCount" class="count">0</span></div>
+        <div class="order-options"><label>Order type<select id="orderType"><option>Dine-in</option><option>Takeaway</option></select></label><label>Payment recorded<select id="paymentMethod"><option>Cash</option><option>Card</option><option>UPI</option></select></label></div>
+        <div id="cartItems" class="cart-items" aria-live="polite"></div>
+        <label class="discount-label">Discount amount <input id="discount" inputmode="decimal" type="number" min="0" step="0.01" value="0" aria-label="Discount amount"></label>
+        <div class="totals"><div><span>Subtotal</span><strong id="subtotal">—</strong></div><div><span>Discount</span><strong id="discountValue">—</strong></div><div><span id="taxLabel">Tax</span><strong id="taxValue">—</strong></div><div class="grand-total"><span>Total</span><strong id="totalValue">—</strong></div></div>
+        <button id="checkout" class="button checkout" disabled>Complete bill <span aria-hidden="true">↗</span></button><button id="clearCart" class="text-button clear-cart">Clear order</button>
+        <p class="cart-note">Record a bill after collecting payment.<br>This app does not process card or UPI payments.</p><p id="cartError" class="notice error" role="alert" hidden></p>
+      </aside>
+    </section>
+    <section id="salesView" hidden>
+      <div class="sales-toolbar"><div><p class="eyebrow">THE BIGGER PICTURE</p><h2>Your café, in numbers.</h2></div><form id="periodForm" class="period-form"><label>From<input id="startDate" type="date" required></label><label>To<input id="endDate" type="date" required></label><button class="button small" type="submit">Apply</button><a id="exportLink" class="button secondary small" href="/api/export.csv">Export CSV ↓</a></form></div>
+      <p id="salesError" class="notice error" role="alert" hidden></p><div id="metrics" class="metrics"></div>
+      <div class="insights-grid"><section class="panel chart-panel"><div class="section-title"><div><p class="eyebrow">DAY BY DAY</p><h3>Net sales</h3></div><span class="legend"><i></i> After discount · excluding tax</span></div><div id="salesChart" class="chart" aria-label="Daily net sales chart"></div></section><section class="panel"><p class="eyebrow">CROWD FAVOURITES</p><h3>Best sellers</h3><div id="bestSellers"></div><p class="muted small-copy">Ranked by units sold during the selected period.</p></section></div>
+      <section class="forecast-panel"><div class="section-title"><div><p class="eyebrow">A LOOK AHEAD · BASIC MACHINE LEARNING</p><h2>The next seven days.</h2></div><span class="forecast-tag">ESTIMATE, NOT A GUARANTEE</span></div><p id="forecastStatus" class="muted">Loading forecast…</p><div id="forecastContent"></div></section>
+      <section class="panel recent-panel"><div class="section-title"><div><p class="eyebrow">THE PAPER TRAIL</p><h3>Recent bills</h3></div><span class="muted small-copy">Latest 20 in your selected period</span></div><div class="table-wrap"><table><thead><tr><th>Bill</th><th>When</th><th>Payment</th><th>Total</th><th></th></tr></thead><tbody id="recentBills"></tbody></table></div></section>
+    </section>
+    <footer><span>Café Ledger</span><p>Built for the rhythm of a small café.</p><span>Python · SQLite · a little ML</span></footer>
+  </main>
+  <dialog id="receiptDialog"><div class="dialog-actions"><button id="printReceipt" class="button small">Print receipt</button><button id="closeReceipt" class="icon-button" aria-label="Close receipt">×</button></div><article id="receipt"></article></dialog>
+  <dialog id="menuDialog"><div class="section-title"><h2 id="menuDialogTitle">Add menu item</h2><button id="closeMenuDialog" class="icon-button" aria-label="Close menu editor">×</button></div><form id="menuForm"><input id="menuId" type="hidden"><label>Item name<input id="itemName" required maxlength="80"></label><label>Category<input id="itemCategory" required maxlength="40" list="categorySuggestions"></label><datalist id="categorySuggestions"></datalist><label>Price<input id="itemPrice" required type="number" min="0.01" max="100000" step="0.01"></label><label class="checkbox-label"><input id="itemActive" type="checkbox" checked>Available for new orders</label><p id="menuError" class="notice error" role="alert" hidden></p><button id="saveMenuItem" class="button" type="submit">Save item</button></form></dialog>
+  <div id="toast" class="toast" role="status" hidden></div>
+</body>
+</html>
