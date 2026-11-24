@@ -1,8 +1,6 @@
-# cafe-billing
+# Cafe Ledger — Cafe Billing and Sales Prediction System
 
-# Café Ledger — Café Billing and Sales Prediction System
-
-Café Ledger is a web application that combines café billing, sales analysis, and basic machine learning. It helps staff create bills, review sales patterns, and estimate daily sales for the next seven days.
+Cafe Ledger is a web application that combines cafe billing, sales analysis, and basic machine learning. It helps staff create bills, review sales patterns, and estimate daily sales for the next seven days.
 
 This project demonstrates how programming, databases, and machine learning can work together in a practical business application.
 
@@ -12,7 +10,7 @@ Website: https://cafe-billing-3.onrender.com
 
 The application requires staff sign-in. Login credentials are configured privately through Render environment variables and are not included in this repository.
 
-When demonstration mode is enabled, the application uses synthetic sales data. These records do not represent an actual café’s performance.
+When demonstration mode is enabled, the application uses synthetic sales data. These records do not represent an actual cafe’s performance.
 
 ## What Has Been Built
 
